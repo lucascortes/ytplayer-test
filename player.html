@@ -44,11 +44,10 @@
         }
 
         try {
-            const decoded = decodeURIComponent(rawConfig);
-            console.log("Config received:", decoded);
-            return JSON.parse(decoded);
+            console.log("Config received (raw):", rawConfig);
+            return JSON.parse(rawConfig);
         } catch (e) {
-            console.error("❌ Failed to parse config:", e);
+            console.error("❌ Failed to parse config:", e, rawConfig);
             return null;
         }
     }
