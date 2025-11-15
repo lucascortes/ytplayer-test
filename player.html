@@ -54,77 +54,75 @@
             onerror="window.location.href='ytplayer://onYouTubeIframeAPIFailedToLoad'"></script>
 
     <script>
-        var player;
-        var error = false;
+    var player;
+    var error = false;
 
-        // Esperar que la API de YouTube esté lista
-        function onYouTubeIframeAPIReady() {
-            // 💡 Reemplazamos %@ en Objective-C antes de cargar este HTML
-            var config = {
-    height: '100%',
-    width: '100%',
-    videoId: 'M7lc1UVf-VE',
-    playerVars: {
-        origin: window.location.origin,
-        rel: 0,
-        modestbranding: 1
-    },
-    events: {
-        'onReady': onReady,
-        'onStateChange': onStateChange,
-        'onPlaybackQualityChange': onPlaybackQualityChange,
-        'onError': onPlayerError
-    }
-};
+    function onYouTubeIframeAPIReady() {
 
-            // Asegurar que existan origin y host válidos
-            if (!config.playerVars) config.playerVars = {};
-            config.playerVars.origin = window.location.origin;  
-            config.playerVars.host = "https://www.youtube.com";
-
-            player = new YT.Player('player', config);
-            player.setSize(window.innerWidth, window.innerHeight);
-
-            window.location.href = 'ytplayer://onYouTubeIframeAPIReady';
-
-            function getCurrentTime() {
-                var state = player.getPlayerState();
-                if (state == YT.PlayerState.PLAYING) {
-                    var time = player.getCurrentTime();
-                    window.location.href = 'ytplayer://onPlayTime?data=' + time;
-                }
-            }
-            window.setInterval(getCurrentTime, 500);
-        }
-
-        function onReady(event) {
-            window.location.href = 'ytplayer://onReady?data=' + event.data;
-        }
-
-        function onStateChange(event) {
-            if (!error) {
-                window.location.href = 'ytplayer://onStateChange?data=' + event.data;
-            } else {
-                error = false;
-            }
-        }
-
-        function onPlaybackQualityChange(event) {
-            window.location.href = 'ytplayer://onPlaybackQualityChange?data=' + event.data;
-        }
-
-        function onPlayerError(event) {
-            if (event.data == 100) {
-                error = true;
-            }
-            window.location.href = 'ytplayer://onError?data=' + event.data;
-        }
-
-        window.onresize = function() {
-            if (player) {
-                player.setSize(window.innerWidth, window.innerHeight);
+        var config = {
+            height: '100%',
+            width: '100%',
+            videoId: 'M7lc1UVf-VE',
+            playerVars: {
+                rel: 0,
+                modestbranding: 1,
+                playsinline: 1
+            },
+            events: {
+                'onReady': onReady,
+                'onStateChange': onStateChange,
+                'onPlaybackQualityChange': onPlaybackQualityChange,
+                'onError': onPlayerError
             }
         };
-    </script>
+
+        // ❌ Eliminar todas estas líneas
+        // config.playerVars.origin = window.location.origin;
+        // config.playerVars.host = "https://www.youtube.com";
+
+        player = new YT.Player('player', config);
+        player.setSize(window.innerWidth, window.innerHeight);
+
+        window.location.href = 'ytplayer://onYouTubeIframeAPIReady';
+
+        function getCurrentTime() {
+            var state = player.getPlayerState();
+            if (state == YT.PlayerState.PLAYING) {
+                var time = player.getCurrentTime();
+                window.location.href = 'ytplayer://onPlayTime?data=' + time;
+            }
+        }
+        window.setInterval(getCurrentTime, 500);
+    }
+
+    function onReady(event) {
+        window.location.href = 'ytplayer://onReady?data=' + event.data;
+    }
+
+    function onStateChange(event) {
+        if (!error) {
+            window.location.href = 'ytplayer://onStateChange?data=' + event.data;
+        } else {
+            error = false;
+        }
+    }
+
+    function onPlaybackQualityChange(event) {
+        window.location.href = 'ytplayer://onPlaybackQualityChange?data=' + event.data;
+    }
+
+    function onPlayerError(event) {
+        if (event.data == 100) {
+            error = true;
+        }
+        window.location.href = 'ytplayer://onError?data=' + event.data;
+    }
+
+    window.onresize = function() {
+        if (player) {
+            player.setSize(window.innerWidth, window.innerHeight);
+        }
+    };
+</script>
 </body>
 </html>
